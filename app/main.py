@@ -23,7 +23,7 @@ def news_list():
 def news_list_labels():
     db_session = session()
     rows = db_session.query(News).filter(News.label != None).all()
-    return template('news', rows=rows, next_id=0)
+    return template('news_labeled', rows=rows, next_id=0)
 
 
 @route('/update_news')
@@ -63,7 +63,8 @@ def add_label():
     news_item = db_session.query(News).get(news_item_id)
     news_item.label = label
     db_session.commit()
-    redirect('/news')
+    redirect_path = request.query.redirect or '/news'
+    redirect(redirect_path)
 
 
 @route('/recommendations')
@@ -82,7 +83,7 @@ def recommendations():
     for i in range(len(news)):
         news[i].label = y[i]
 
-    classified_news = [it for it in news if it.label in ['good', 'maybe', 'never']]
+    classified_news = [it for it in news if it.label in ['good', 'maybe']]
     priority_labels = ['good', 'maybe', 'never']
     classified_news = sorted(classified_news, key=lambda x: priority_labels.index(x.label))
 
