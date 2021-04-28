@@ -83,8 +83,7 @@ def recommendations():
     for i in range(len(news)):
         news[i].label = y[i]
 
-    classified_news = [it for it in news if it.label in ['good', 'maybe']]
-    priority_labels = ['good', 'maybe', 'never']
-    classified_news = sorted(classified_news, key=lambda x: priority_labels.index(x.label))
+    classified_news = [it for it in news if it.label in config.recommendation_labels]
+    classified_news = sorted(classified_news, key=lambda x: config.labels_priority.index(x.label))
 
     return template('news_recommendations', rows=classified_news)
